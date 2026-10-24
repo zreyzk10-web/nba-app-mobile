@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      // Se añade un timeout de 60 segundos para permitir que Render despierte si está inactivo
       final response = await http.post(
         Uri.parse('$backendUrl/api/v1/predict'),
         headers: {'Content-Type': 'application/json'},
@@ -59,22 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
           currentPrediction = jsonDecode(response.body);
         });
       } else {
-           if (response.statusCode == 200) {
-        setState(() {
-          currentPrediction = jsonDecode(response.body);
-        });
-      } else {
-        // Esto mostrará el código exacto y el mensaje que envía tu backend
         _showError('Error ${response.statusCode}: ${response.body}');
       }
     } catch (e) {
-      // Esto mostrará el error técnico exacto en la pantalla de tu teléfono
       _showError('Excepción: $e');
-    }
- ;
-      }
-    } catch (e) {
-      _showError('El servidor está despertando. Inténtalo de nuevo en 30s.');
     } finally {
       setState(() {
         isLoading = false;
@@ -128,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     CircularProgressIndicator(),
                     SizedBox(height: 12),
                     Text(
-                      'Conectando con la IA (si el servidor dormía, puede tardar unos segundos)...',
+                      'Conectando con la IA...',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white70),
                     ),
