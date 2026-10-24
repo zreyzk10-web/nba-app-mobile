@@ -23,6 +23,9 @@ jobs:
           flutter-version: '3.19.0'
           channel: 'stable'
 
+      - name: Generar estructura de Android limpia
+        run: flutter create . --platforms=android --project-name nba_app
+
       - name: Instalar dependencias
         run: flutter pub get
 
