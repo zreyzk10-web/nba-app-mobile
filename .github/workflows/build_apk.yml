@@ -24,7 +24,7 @@ jobs:
           channel: 'stable'
 
       - name: Generar estructura de Android limpia
-        run: flutter create . --platforms=android --project-name nba_app
+        run: flutter create . --platforms=android --org com.nba.app --project-name nba_app
 
       - name: Instalar dependencias
         run: flutter pub get
