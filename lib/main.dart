@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('$backendUrl/api/v1/predict'),
+        Uri.parse('$backendUrl/predict'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'home_team': home,
