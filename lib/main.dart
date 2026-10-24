@@ -59,7 +59,19 @@ class _HomeScreenState extends State<HomeScreen> {
           currentPrediction = jsonDecode(response.body);
         });
       } else {
-        _showError('Error del servidor (${response.statusCode})');
+           if (response.statusCode == 200) {
+        setState(() {
+          currentPrediction = jsonDecode(response.body);
+        });
+      } else {
+        // Esto mostrará el código exacto y el mensaje que envía tu backend
+        _showError('Error ${response.statusCode}: ${response.body}');
+      }
+    } catch (e) {
+      // Esto mostrará el error técnico exacto en la pantalla de tu teléfono
+      _showError('Excepción: $e');
+    }
+ ;
       }
     } catch (e) {
       _showError('El servidor está despertando. Inténtalo de nuevo en 30s.');
