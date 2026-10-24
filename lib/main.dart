@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
+      // Se añade un timeout de 60 segundos para permitir que Render despierte si está inactivo
       final response = await http.post(
         Uri.parse('$backendUrl/api/v1/predict'),
         headers: {'Content-Type': 'application/json'},
@@ -51,17 +52,17 @@ class _HomeScreenState extends State<HomeScreen> {
           'home_team': home,
           'visitor_team': visitor,
         }),
-      );
+      ).timeout(const Duration(seconds: 60));
 
       if (response.statusCode == 200) {
         setState(() {
           currentPrediction = jsonDecode(response.body);
         });
       } else {
-        _showError('Error en el servidor: ${response.statusCode}');
+        _showError('Error del servidor (${response.statusCode})');
       }
     } catch (e) {
-      _showError('Error de conexión con el servidor');
+      _showError('El servidor está despertando. Inténtalo de nuevo en 30s.');
     } finally {
       setState(() {
         isLoading = false;
@@ -109,7 +110,19 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 24),
             if (isLoading)
-              const Center(child: CircularProgressIndicator())
+              const Center(
+                child: Column(
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 12),
+                    Text(
+                      'Conectando con la IA (si el servidor dormía, puede tardar unos segundos)...',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ],
+                ),
+              )
             else if (currentPrediction != null)
               Container(
                 padding: const EdgeInsets.all(16),
